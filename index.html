@@ -490,25 +490,30 @@
     function setupDynamicHeader() {
       const header = document.getElementById('header');
       const main = document.getElementById('main');
-      const skillsSection = document.getElementById('skills');
-      let headerShrunk = false;
       
       window.addEventListener('scroll', () => {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const skillsRect = skillsSection.getBoundingClientRect();
-        const shrunkHeaderHeight = 70; // Height of shrunk header
+        const headerHeight = window.innerHeight; // Full viewport height for hero
         
-        // Shrink when skills section title reaches the sticky header position
-        if (skillsRect.top <= shrunkHeaderHeight && !headerShrunk) {
+        // Simple threshold - shrink after scrolling past the hero section
+        if (scrollTop > headerHeight - 100) {
           header.classList.add('shrunk');
           main.classList.add('header-shrunk');
-          headerShrunk = true;
-        } else if (scrollTop < 100 && headerShrunk) {
+        } else {
           header.classList.remove('shrunk');
           main.classList.remove('header-shrunk');
-          headerShrunk = false;
         }
       });
+      
+      // Handle scroll indicator click to scroll to skills section
+      const scrollIndicator = document.querySelector('.scroll-indicator');
+      if (scrollIndicator) {
+        scrollIndicator.addEventListener('click', function() {
+          document.querySelector('#skills').scrollIntoView({
+            behavior: 'smooth'
+          });
+        });
+      }
     }
 
     // Smooth scrolling for anchor links
@@ -516,15 +521,7 @@
       createParticles();
       setupDynamicHeader();
 
-      // Add scroll indicator functionality
-      const scrollIndicator = document.querySelector('.scroll-indicator');
-      if (scrollIndicator) {
-        scrollIndicator.addEventListener('click', function() {
-          document.querySelector('#about').scrollIntoView({
-            behavior: 'smooth'
-          });
-        });
-      }
+      // Scroll indicator functionality is now in setupDynamicHeader
 
       // Intersection Observer for animations
       const observerOptions = {
