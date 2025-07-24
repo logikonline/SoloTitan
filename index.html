@@ -491,18 +491,22 @@
       const header = document.getElementById('header');
       const main = document.getElementById('main');
       const aboutSection = document.getElementById('about');
+      let headerShrunk = false;
       
       window.addEventListener('scroll', () => {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const aboutTop = aboutSection.offsetTop;
-        const triggerPoint = aboutTop - 150; // Trigger before about section reaches top
+        const aboutRect = aboutSection.getBoundingClientRect();
+        const shrunkHeaderHeight = 70; // Height of shrunk header
         
-        if (scrollTop > triggerPoint) {
+        // Shrink when about section is about to hit where the shrunk header will be
+        if (aboutRect.top <= shrunkHeaderHeight + 50 && !headerShrunk) {
           header.classList.add('shrunk');
           main.classList.add('header-shrunk');
-        } else {
+          headerShrunk = true;
+        } else if (scrollTop < 100 && headerShrunk) {
           header.classList.remove('shrunk');
           main.classList.remove('header-shrunk');
+          headerShrunk = false;
         }
       });
     }
