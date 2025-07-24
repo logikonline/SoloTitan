@@ -495,8 +495,9 @@
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const headerHeight = window.innerHeight; // Full viewport height for hero
         
-        // Simple threshold - shrink after scrolling past the hero section
-        if (scrollTop > headerHeight - 100) {
+        // Shrink when we've scrolled about 80% through the hero section
+        // This positions "Grit Meets Vision" at the top when header shrinks
+        if (scrollTop > headerHeight * 0.65) {
           header.classList.add('shrunk');
           main.classList.add('header-shrunk');
         } else {
