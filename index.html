@@ -494,8 +494,8 @@
       
       window.addEventListener('scroll', () => {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const windowHeight = window.innerHeight;
-        const triggerPoint = windowHeight - 200; // Trigger when about section is near top
+        const aboutTop = aboutSection.offsetTop;
+        const triggerPoint = aboutTop - 150; // Trigger before about section reaches top
         
         if (scrollTop > triggerPoint) {
           header.classList.add('shrunk');
