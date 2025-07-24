@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SoloTitan</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+      color: #ffffff;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Animated background particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: rgba(243, 156, 18, 0.3);
+      border-radius: 50%;
+      animation: float 20s infinite linear;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Header - starts as full hero, becomes sticky when shrunk */
+    header {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse at center, rgba(243, 156, 18, 0.1) 0%, transparent 70%);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Shrunk state - becomes fixed and compact */
+    header.shrunk {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      min-height: 70px;
+      background: linear-gradient(135deg, rgba(18, 18, 18, 0.98) 0%, rgba(26, 26, 26, 0.98) 100%);
+      backdrop-filter: blur(30px);
+      border-bottom: 1px solid rgba(243, 156, 18, 0.3);
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(ellipse at center, rgba(243, 156, 18, 0.1) 0%, transparent 70%);
+      opacity: 1;
+      transition: opacity 0.4s ease;
+    }
+
+    header.shrunk::before {
+      opacity: 0;
+    }
+
+    .hero-content {
+      text-align: center;
+      z-index: 2;
+      position: relative;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .hero-title {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #f39c12, #e74c3c, #9b59b6);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: glow 3s ease-in-out infinite alternate;
+      line-height: 1.1;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    header.shrunk .hero-title {
+      font-size: clamp(1.4rem, 3vw, 1.8rem);
+      line-height: 1;
+      margin-bottom: 0;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 20px rgba(243, 156, 18, 0.5);
+      }
+      to {
+        text-shadow: 0 0 30px rgba(243, 156, 18, 0.8), 0 0 40px rgba(243, 156, 18, 0.5);
+      }
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      margin-bottom: 2rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    header.shrunk .hero-subtitle {
+      opacity: 0;
+      transform: translateY(-20px);
+      margin: 0;
+      height: 0;
+      overflow: hidden;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounce 2s infinite;
+      opacity: 1;
+      transition: opacity 0.4s ease;
+    }
+
+    header.shrunk .scroll-indicator {
+      opacity: 0;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateX(-50%) translateY(0);
+      }
+      40% {
+        transform: translateX(-50%) translateY(-10px);
+      }
+      60% {
+        transform: translateX(-50%) translateY(-5px);
+      }
+    }
+
+    /* Main content spacing */
+    main {
+      margin-top: 0;
+      transition: margin-top 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    main.header-shrunk {
+      margin-top: 70px;
+    }
+
+    /* Sections */
+    section {
+      padding: 5rem 0;
+      position: relative;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      margin-bottom: 2rem;
+      color: #f39c12;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #f39c12, #e74c3c);
+      border-radius: 2px;
+    }
+
+    .section-content {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin-bottom: 2rem;
+    }
+
+    /* Skills Grid */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .skill-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(243, 156, 18, 0.2);
+      padding: 2rem;
+      border-radius: 15px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .skill-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(243, 156, 18, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .skill-card:hover::before {
+      left: 100%;
+    }
+
+    .skill-card:hover {
+      transform: translateY(-5px);
+      border-color: #f39c12;
+      box-shadow: 0 10px 30px rgba(243, 156, 18, 0.2);
+    }
+
+    .skill-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #f39c12, #e74c3c);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .skill-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #f39c12;
+    }
+
+    /* Projects */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .project-card {
+      background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(231, 76, 60, 0.1));
+      border: 1px solid rgba(243, 156, 18, 0.3);
+      padding: 2rem;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .project-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #f39c12;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-description {
+      opacity: 0.8;
+      line-height: 1.6;
+    }
+
+    /* Quote Section */
+    .quote-section {
+      background: rgba(243, 156, 18, 0.05);
+      margin: 4rem 0;
+      padding: 4rem 2rem;
+      border-radius: 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .quote-text {
+      font-size: clamp(1.2rem, 3vw, 2rem);
+      font-style: italic;
+      color: #f39c12;
+      position: relative;
+    }
+
+    .quote-text::before,
+    .quote-text::after {
+      content: '"';
+      font-size: 3rem;
+      color: rgba(243, 156, 18, 0.5);
+      position: absolute;
+      top: -10px;
+    }
+
+    .quote-text::before {
+      left: -30px;
+    }
+
+    .quote-text::after {
+      right: -30px;
+    }
+
+    /* Contact Section */
+    .contact-section {
+      text-align: center;
+      padding: 5rem 0;
+    }
+
+    .contact-button {
+      display: inline-block;
+      padding: 1rem 3rem;
+      background: linear-gradient(135deg, #f39c12, #e74c3c);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .contact-button:hover::before {
+      left: 100%;
+    }
+
+    .contact-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(243, 156, 18, 0.4);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 1rem;
+      }
+      
+      section {
+        padding: 3rem 0;
+      }
+
+      .quote-text::before,
+      .quote-text::after {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+
+  <header id="header">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title">SoloTitan</h1>
+        <p class="hero-subtitle">Building the impossible — alone, if I must</p>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <div style="width: 2px; height: 30px; background: #f39c12; margin: 0 auto; opacity: 0.6;"></div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section id="about">
+      <div class="container">
+        <h2 class="section-title" id="about-title">One Mind. Many Systems.</h2>
+        <p class="section-content" id="about-content">
+          For decades, I've written the story of resilience — in startups, codebases, and the chaos of the world. 
+          Every line of code, every late night, every breakthrough has been a step toward redefining what's possible.
+        </p>
+      </div>
+    </section>
+
+    <section id="skills">
+      <div class="container">
+        <h2 class="section-title" id="skills-title">Grit Meets Vision</h2>
+        <div class="skills-grid" id="skills-grid">
+          <!-- Skills will be loaded dynamically from vision.json -->
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="container">
+        <h2 class="section-title">Projects Forged in Fire</h2>
+        <div class="projects-grid" id="projects-grid">
+          <!-- Projects will be loaded dynamically from projects.json -->
+        </div>
+      </div>
+    </section>
+
+    <section id="ethos">
+      <div class="container">
+        <div class="quote-section">
+          <p class="quote-text" id="ethos-quote">I don't subscribe to belief in markets — I follow what unfolds</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <div class="contact-section">
+          <h2 class="section-title">Let's Connect</h2>
+          <p class="section-content">Ready to discuss the next impossible project? Let's talk.</p>
+          <a href="mailto:contact@solotitan.com" class="contact-button">Get In Touch</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Create floating particles
+    function createParticles() {
+      const particles = document.getElementById('particles');
+      const particleCount = 50;
+
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 20 + 's';
+        particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+        particles.appendChild(particle);
+      }
+    }
+
+    // Dynamic header shrinking with proper content adjustment
+    function setupDynamicHeader() {
+      const header = document.getElementById('header');
+      const main = document.getElementById('main');
+      
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const headerHeight = header.offsetHeight;
+        
+        if (scrollTop > headerHeight - 100) {
+          header.classList.add('shrunk');
+          main.classList.add('header-shrunk');
+        } else {
+          header.classList.remove('shrunk');
+          main.classList.remove('header-shrunk');
+        }
+      });
+    }
+
+    // Smooth scrolling for anchor links
+    document.addEventListener('DOMContentLoaded', function() {
+      createParticles();
+      setupDynamicHeader();
+
+      // Add scroll indicator functionality
+      const scrollIndicator = document.querySelector('.scroll-indicator');
+      if (scrollIndicator) {
+        scrollIndicator.addEventListener('click', function() {
+          document.querySelector('#about').scrollIntoView({
+            behavior: 'smooth'
+          });
+        });
+      }
+
+      // Intersection Observer for animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, observerOptions);
+
+      // Observe all sections
+      document.querySelectorAll('section').forEach(section => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(30px)';
+        section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(section);
+      });
+    });
+
+    // Parallax effect for header background
+    window.addEventListener('scroll', function() {
+      const scrolled = window.pageYOffset;
+      const particles = document.querySelector('.particles');
+      if (particles) {
+        particles.style.transform = `translateY(${scrolled * 0.3}px)`;
+      }
+    });
+
+    // Load vision data from JSON
+    async function loadVisionData() {
+      try {
+        const response = await fetch('vision.json');
+        const data = await response.json();
+        
+        data.sections.forEach(section => {
+          if (section.id === 'about') {
+            const titleElement = document.getElementById('about-title');
+            const contentElement = document.getElementById('about-content');
+            if (titleElement) titleElement.textContent = section.title;
+            if (contentElement) contentElement.textContent = section.content;
+          } else if (section.id === 'skills') {
+            const titleElement = document.getElementById('skills-title');
+            if (titleElement) titleElement.textContent = section.title;
+            
+            const skillsGrid = document.getElementById('skills-grid');
+            if (skillsGrid && section.skills) {
+              skillsGrid.innerHTML = section.skills.map(skill => `
+                <div class="skill-card">
+                  <div class="skill-icon">${skill.icon}</div>
+                  <div class="skill-title">${skill.title}</div>
+                  <p>${skill.description}</p>
+                </div>
+              `).join('');
+            }
+          } else if (section.id === 'ethos') {
+            const quoteElement = document.getElementById('ethos-quote');
+            if (quoteElement) quoteElement.textContent = section.quote;
+          }
+        });
+      } catch (error) {
+        console.error('Error loading vision data:', error);
+      }
+    }
+
+    // Load projects from JSON
+    async function loadProjects() {
+      try {
+        const response = await fetch('projects.json');
+        const projects = await response.json();
+        
+        const projectsGrid = document.getElementById('projects-grid');
+        if (projectsGrid) {
+          projectsGrid.innerHTML = projects.map(project => `
+            <div class="project-card">
+              <div class="project-name">${project.name}</div>
+              <p class="project-description">${project.description}</p>
+            </div>
+          `).join('');
+        }
+      } catch (error) {
+        console.error('Error loading projects:', error);
+      }
+    }
+
+    // Load data when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      loadVisionData();
+      loadProjects();
+    });
+  </script>
+</body>
+</html>

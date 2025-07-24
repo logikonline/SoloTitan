@@ -1,0 +1,39 @@
+{
+  "sections": [
+    {
+      "id": "about",
+      "title": "One Mind. Many Systems.",
+      "content": "For decades, I've written the story of resilience — in startups, codebases, and the chaos of the world. Every line of code, every late night, every breakthrough has been a step toward redefining what's possible."
+    },
+    {
+      "id": "skills",
+      "title": "Grit Meets Vision",
+      "skills": [
+        {
+          "icon": "⚡",
+          "title": "10x Builder",
+          "description": "Relentless shipping with precision engineering. I don't just code, I architect solutions that scale."
+        },
+        {
+          "icon": "💰",
+          "title": "Self-Funded Ventures",
+          "description": "Bootstrapped success in fintech, AI, and infrastructure. Every dollar earned, every risk calculated."
+        },
+        {
+          "icon": "🔥",
+          "title": "Battle-Tested",
+          "description": "Survivor of burnouts and breakthroughs. What doesn't break me makes me stronger and wiser."
+        },
+        {
+          "icon": "🌍",
+          "title": "Global Defiance",
+          "description": "Architect of systems that challenge the status quo on a planetary scale. Think different, build different."
+        }
+      ]
+    },
+    {
+      "id": "ethos",
+      "quote": "I don't subscribe to belief in markets — I follow what unfolds"
+    }
+  ]
+}
