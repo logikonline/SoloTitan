@@ -490,16 +490,16 @@
     function setupDynamicHeader() {
       const header = document.getElementById('header');
       const main = document.getElementById('main');
-      const aboutSection = document.getElementById('about');
+      const skillsSection = document.getElementById('skills');
       let headerShrunk = false;
       
       window.addEventListener('scroll', () => {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const aboutRect = aboutSection.getBoundingClientRect();
+        const skillsRect = skillsSection.getBoundingClientRect();
         const shrunkHeaderHeight = 70; // Height of shrunk header
         
-        // Shrink when about section is about to hit where the shrunk header will be
-        if (aboutRect.top <= shrunkHeaderHeight + 50 && !headerShrunk) {
+        // Shrink when skills section title reaches the sticky header position
+        if (skillsRect.top <= shrunkHeaderHeight && !headerShrunk) {
           header.classList.add('shrunk');
           main.classList.add('header-shrunk');
           headerShrunk = true;
